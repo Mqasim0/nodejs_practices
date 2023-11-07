@@ -12,6 +12,9 @@ const app = express();
 
 const PORT = 8001;
 
+const dotenv = require("dotenv");
+dotenv.config();
+
 connectDB();
 
 // set the view engine to ejs
