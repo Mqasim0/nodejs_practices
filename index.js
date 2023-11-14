@@ -3,7 +3,9 @@ const path = require("path");
 const dotenv = require("dotenv");
 const { connectDB } = require("./config/db");
 const userRoutes = require("./routes/user");
+const blogRoutes = require("./routes/blog");
 const cookieParser = require("cookie-parser");
+const Blog = require("./models/blog");
 const { checkForAuthenticationCookie } = require("./middleware/authentication");
 
 const app = express();
@@ -20,12 +22,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(checkForAuthenticationCookie("token"));
+app.use(express.static(path.resolve("./public")));
 
 app.use("/user", userRoutes);
+app.use("/blog", blogRoutes);
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  const allBlog = await Blog.find({});
   res.render("home", {
     user: req.user,
+    blogs: allBlog,
   });
 });
 
